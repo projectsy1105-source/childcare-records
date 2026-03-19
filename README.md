@@ -1,2 +1,2 @@
-# childcare-records.github.io
+# childcare-records
 육아기록
