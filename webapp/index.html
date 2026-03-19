@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>수유 기록</title>
+    <link rel="stylesheet" href="./style.css" />
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  </head>
+  <body>
+    <main class="app">
+      <header class="hero">
+        <p class="eyebrow">Baby Log MVP</p>
+        <h1>수유 기록</h1>
+        <p class="sub">텔레그램 Web App으로 빠르게 입력하고 홈봇에 전달</p>
+      </header>
+
+      <section class="card">
+        <label class="label">수유 종류</label>
+        <div class="segmented" id="feedingType">
+          <button type="button" class="seg active" data-value="formula">분유</button>
+          <button type="button" class="seg" data-value="breastmilk">모유</button>
+          <button type="button" class="seg" data-value="mixed">혼합</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <label class="label" for="amount">수유량 (ml)</label>
+        <div class="stepper">
+          <button type="button" class="step" data-step="-10">-10</button>
+          <input id="amount" type="number" inputmode="numeric" min="0" max="400" step="10" value="120" />
+          <button type="button" class="step" data-step="10">+10</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="row row-between">
+          <label class="label" for="recordedAt">기록 시간</label>
+          <button type="button" class="ghost" id="setNow">지금</button>
+        </div>
+        <input id="recordedAt" type="datetime-local" />
+      </section>
+
+      <section class="card">
+        <label class="label" for="note">메모</label>
+        <textarea id="note" rows="3" placeholder="예: 잠결수유, 적게 먹음"></textarea>
+      </section>
+
+      <section class="card payload-card">
+        <div class="row row-between">
+          <label class="label">전달 payload 미리보기</label>
+          <button type="button" class="ghost" id="copyPayload">복사</button>
+        </div>
+        <pre id="payloadPreview"></pre>
+      </section>
+
+      <footer class="actions">
+        <button type="button" class="secondary" id="cancelBtn">취소</button>
+        <button type="button" class="primary" id="submitBtn">홈봇으로 전달</button>
+      </footer>
+    </main>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
