@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Mighty — Game UI Prototype</title>
+  <style>
+    /* ========================================================
+     * DESIGN TOKENS
+     * ======================================================== */
+    :root {
+      --c-bg:         #f8efe0;
+      --c-surface:    rgba(255,255,255,0.90);
+      --c-surface-lo: rgba(255,255,255,0.64);
+      --c-primary:    #845b22;
+      --c-primary-lo: rgba(132,91,34,0.10);
+      --c-text:       #1d1d1f;
+      --c-muted:      #4a4032;
+      --c-subtle:     #6d614f;
+      --c-green:      #21653d;
+      --c-red:        #c0392b;
+      --c-felt:       #b8956a;
+      --c-felt-dark:  #a07c50;
+      --c-spade:      #1d1d1f;
+      --c-heart:      #c0392b;
+      --c-diamond:    #b05000;
+      --c-club:       #1a6b3a;
+      --c-nt:         #5b22ad;
+
+      --r-sm:   10px;
+      --r-md:   16px;
+      --r-lg:   22px;
+      --r-xl:   28px;
+      --r-pill: 999px;
+
+      --sh-sm: 0 3px 10px rgba(70,47,16,0.12);
+      --sh-md: 0 8px 24px rgba(70,47,16,0.16);
+      --sh-lg: 0 16px 44px rgba(70,47,16,0.20);
+
+      --sat: env(safe-area-inset-top, 44px);
+      --sab: env(safe-area-inset-bottom, 34px);
+
+      /* Prototype nav chrome at bottom */
+      --proto-h: calc(var(--sab) + 52px);
+    }
+
+    /* ========================================================
+     * RESET & BASE
+     * ======================================================== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(180deg, #fff6d6 0%, #f8efe0 45%, #efe6d6 100%);
+      min-height: 100vh;
+      color: var(--c-text);
+      overscroll-behavior: none;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button { font-family: inherit; }
+
+    /* ========================================================
+     * APP SHELL — max-width container, centered
+     * ======================================================== */
+    #app {
+      max-width: 430px;
+      margin: 0 auto;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    /* ========================================================
+     * SCREEN SYSTEM
+     * ======================================================== */
+    .screen {
+      display: none;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .screen.active { display: flex; }
+
+    /* ========================================================
+     * PROTOTYPE CHROME — fixed at bottom, dark pill row
+     * ======================================================== */
+    #proto-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(100%, 430px);
+      z-index: 9999;
+      background: rgba(20,16,12,0.93);
+      backdrop-filter: blur(16px);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 8px 12px calc(var(--sab) + 4px);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    #proto-nav::-webkit-scrollbar { display: none; }
+    #proto-nav .proto-label {
+      color: rgba(255,255,255,0.35);
+      font-size: 9px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      flex-shrink: 0;
+    }
+    #proto-nav button {
+      flex-shrink: 0;
+      padding: 6px 11px;
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 8px;
+      background: transparent;
+      color: rgba(255,255,255,0.6);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+    #proto-nav button.active {
+      background: var(--c-primary);
+      border-color: var(--c-primary);
+      color: #fff;
+    }
+
+    /* ========================================================
+     * COMMON HEADER
+     * ======================================================== */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: calc(var(--sat) + 10px) 20px 12px;
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(132,91,34,0.07);
+    }
+    .app-header__title {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--c-primary);
+    }
+    .back-btn {
+      width: 38px;
+      height: 38px;
+      border: none;
+      border-radius: 50%;
+      background: var(--c-primary-lo);
+      color: var(--c-primary);
+      font-size: 20px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+    .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--c-primary);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ========================================================
+     * PILL / BADGE
+     * ======================================================== */
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: var(--r-pill);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .pill--muted   { background: var(--c-primary-lo); color: var(--c-primary); }
+    .pill--green   { background: rgba(33,101,61,0.12); color: var(--c-green); }
+    .pill--red     { background: rgba(192,57,43,0.12); color: var(--c-red); }
+    .pill--yellow  { background: rgba(195,132,17,0.14); color: #8c5d00; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+
+    /* ========================================================
+     * BUTTONS
+     * ======================================================== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 22px;
+      border: none;
+      border-radius: var(--r-md);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.14s, transform 0.1s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn:active:not(:disabled) { opacity: 0.76; transform: scale(0.97); }
+    .btn--primary { background: var(--c-primary); color: #fff; }
+    .btn--ghost   { background: var(--c-primary-lo); color: var(--c-primary); }
+    .btn--danger  { background: rgba(192,57,43,0.10); color: var(--c-red); }
+    .btn--sm      { padding: 10px 16px; font-size: 14px; border-radius: var(--r-sm); }
+    .btn--full    { width: 100%; }
+    .btn:disabled { opacity: 0.38; cursor: not-allowed; }
+
+    /* ========================================================
+     * CARD CHIP — your hand cards
+     * ======================================================== */
+    .card-chip {
+      width: 42px;
+      height: 58px;
+      border-radius: 7px;
+      background: #fff;
+      box-shadow: var(--sh-sm);
+      border: 1.5px solid rgba(0,0,0,0.07);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 3px;
+      flex-shrink: 0;
+      user-select: none;
+      transition: transform 0.18s cubic-bezier(.34,1.56,.64,1), box-shadow 0.18s, opacity 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .card-chip .rank { font-size: 12px; font-weight: 800; line-height: 1; align-self: flex-start; }
+    .card-chip .suit { font-size: 16px; line-height: 1; }
+    .card-chip.playable { cursor: pointer; }
+    .card-chip.playable:hover { transform: translateY(-4px); }
+    .card-chip.selected  { transform: translateY(-12px); box-shadow: var(--sh-md); border-color: var(--c-primary); }
+    .card-chip.played    { opacity: 0.32; transform: scale(0.9); }
+    .card-chip.back {
+      background: var(--c-primary);
+      border-color: transparent;
+      cursor: default;
+    }
+    .card-chip.back::after { content: '⟐'; color: rgba(255,255,255,0.3); font-size: 22px; }
+    .card-chip.joker {
+      background: linear-gradient(135deg, #fffbee, #ffeea0);
+      border-color: var(--c-primary);
+    }
+    .card-chip.joker .rank { font-size: 9px; }
+
+    /* Mini card — trick center display */
+    .card-mini {
+      width: 34px;
+      height: 46px;
+      border-radius: 5px;
+      background: #fff;
+      box-shadow: 0 2px 7px rgba(0,0,0,0.14);
+      border: 1px solid rgba(0,0,0,0.07);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 3px;
+      font-weight: 800;
+    }
+    .card-mini .rank { font-size: 9px; line-height: 1; align-self: flex-start; }
+    .card-mini .suit { font-size: 13px; line-height: 1; }
+    .card-mini.empty {
+      background: rgba(255,255,255,0.20);
+      box-shadow: none;
+      border: 1.5px dashed rgba(255,255,255,0.35);
+    }
+
+    .c-spade   { color: var(--c-spade); }
+    .c-heart   { color: var(--c-heart); }
+    .c-diamond { color: var(--c-diamond); }
+    .c-club    { color: var(--c-club); }
+    .c-nt      { color: var(--c-nt); }
+
+    /* ========================================================
+     * SEAT WIDGET — small opponent info card
+     * ======================================================== */
+    .seat-widget {
+      background: rgba(255,255,255,0.88);
+      border-radius: var(--r-md);
+      padding: 10px 12px;
+      box-shadow: var(--sh-sm);
+      min-width: 88px;
+      max-width: 110px;
+      border: 1.5px solid transparent;
+    }
+    .seat-widget__name {
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .seat-widget__sub {
+      font-size: 10px;
+      color: var(--c-subtle);
+      margin-top: 3px;
+    }
+    .seat-widget__cards {
+      display: flex;
+      gap: 3px;
+      margin-top: 8px;
+    }
+    .seat-widget.active-turn {
+      border-color: var(--c-primary);
+      animation: seat-pulse 1.2s ease-in-out infinite alternate;
+    }
+    @keyframes seat-pulse {
+      from { box-shadow: var(--sh-sm); }
+      to   { box-shadow: 0 0 0 6px rgba(132,91,34,0.18), var(--sh-sm); }
+    }
+
+    /* ========================================================
+     * SCREEN: LOBBY
+     * ======================================================== */
+    #screen-lobby {
+      padding-bottom: var(--proto-h);
+    }
+    .lobby-body {
+      padding: 20px 20px 100px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .lobby-greeting { font-size: 13px; color: var(--c-subtle); margin-bottom: 2px; }
+    .lobby-heading  { font-size: 30px; font-weight: 900; line-height: 1.05; margin-bottom: 24px; }
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--c-primary);
+      margin-bottom: 12px;
+    }
+    .room-list { display: flex; flex-direction: column; gap: 10px; }
+    .room-card {
+      background: var(--c-surface);
+      border-radius: var(--r-lg);
+      padding: 18px 20px;
+      box-shadow: var(--sh-sm);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .room-card__name { font-size: 16px; font-weight: 700; }
+    .room-card__meta { font-size: 13px; color: var(--c-muted); margin-top: 4px; }
+    .lobby-cta {
+      position: fixed;
+      bottom: var(--proto-h);
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(min(100%, 430px) - 40px);
+      z-index: 90;
+      padding-bottom: 0;
+    }
+    .lobby-cta .btn { box-shadow: var(--sh-lg); }
+
+    /* ========================================================
+     * SCREEN: ROOM
+     * ======================================================== */
+    #screen-room { padding-bottom: var(--proto-h); }
+    .room-body { padding: 20px; display: flex; flex-direction: column; gap: 0; }
+    .room-code-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .room-code {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 16px;
+      background: var(--c-primary-lo);
+      border-radius: var(--r-sm);
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      color: var(--c-primary);
+    }
+    .room-name { font-size: 22px; font-weight: 800; margin-bottom: 20px; }
+    .seat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .room-seat {
+      background: var(--c-surface);
+      border-radius: var(--r-lg);
+      padding: 16px;
+      box-shadow: var(--sh-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 96px;
+    }
+    .room-seat.empty {
+      background: rgba(132,91,34,0.04);
+      box-shadow: none;
+      border: 1.5px dashed rgba(132,91,34,0.16);
+    }
+    .room-seat.is-you {
+      border: 2px solid var(--c-primary);
+      background: rgba(132,91,34,0.07);
+    }
+    .room-seat__num  { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--c-primary); opacity: 0.7; }
+    .room-seat__name { font-size: 16px; font-weight: 700; }
+    .room-seat__badges { display: flex; flex-wrap: wrap; gap: 5px; }
+    .room-actions { display: flex; flex-direction: column; gap: 10px; }
+
+    /* ========================================================
+     * SCREEN: GAME
+     * ======================================================== */
+    #screen-game {
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+      background: radial-gradient(circle at 30% 20%, #c8a878 0%, #b8966a 50%, #a07c50 100%);
+    }
+
+    /* Top info bar */
+    .game-topbar {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      z-index: 20;
+      padding: calc(var(--sat) + 8px) 16px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: rgba(0,0,0,0.28);
+      backdrop-filter: blur(10px);
+    }
+    .topbar-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+    .topbar-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 2px;
+    }
+    .contract-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 12px;
+      background: rgba(255,255,255,0.18);
+      border-radius: var(--r-sm);
+      font-size: 20px;
+      font-weight: 900;
+      color: #fff;
+    }
+    .topbar-divider {
+      width: 1px;
+      height: 32px;
+      background: rgba(255,255,255,0.18);
+      flex-shrink: 0;
+    }
+    .topbar-block { min-width: 0; }
+    .topbar-value { font-size: 13px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .score-display { display: flex; align-items: center; gap: 8px; }
+    .score-team { text-align: center; }
+    .score-team__label { font-size: 9px; color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: 0.06em; }
+    .score-team__value { font-size: 24px; font-weight: 900; color: #fff; line-height: 1; }
+    .score-sep { font-size: 14px; color: rgba(255,255,255,0.35); }
+
+    /* Table surface (excludes topbar & hand) */
+    .game-table {
+      position: absolute;
+      left: 0; right: 0;
+      z-index: 5;
+    }
+
+    /* Seat positions */
+    .seat-pos { position: absolute; }
+    .seat-pos--nw { top: 16px; left: 12px; }
+    .seat-pos--ne { top: 16px; right: 12px; }
+    .seat-pos--w  { top: 50%; left: 8px;  transform: translateY(-50%); }
+    .seat-pos--e  { top: 50%; right: 8px; transform: translateY(-50%); }
+
+    /* Trick center */
+    .trick-center {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 170px;
+      text-align: center;
+    }
+    .trick-label-small {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 8px;
+    }
+    .trick-cards {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .trick-card-slot {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+    }
+    .trick-pos-label {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.50);
+    }
+
+    /* Bid center display */
+    .bid-center {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(14px);
+      border-radius: var(--r-xl);
+      padding: 18px 28px;
+      text-align: center;
+      box-shadow: var(--sh-lg);
+      min-width: 160px;
+    }
+    .bid-center__eyebrow {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.10em;
+      color: var(--c-primary);
+      margin-bottom: 6px;
+    }
+    .bid-center__value {
+      font-size: 36px;
+      font-weight: 900;
+      color: var(--c-text);
+      line-height: 1;
+    }
+    .bid-center__by { font-size: 12px; color: var(--c-subtle); margin-top: 6px; }
+
+    /* Bid history chips */
+    .bid-history {
+      position: absolute;
+      bottom: 16px; left: 0; right: 0;
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 0 12px;
+    }
+    .bid-history-chip {
+      padding: 4px 10px;
+      border-radius: var(--r-pill);
+      background: rgba(255,255,255,0.20);
+      font-size: 11px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.70);
+    }
+    .bid-history-chip.pass { text-decoration: line-through; opacity: 0.55; }
+
+    /* Hand area at bottom of game screen */
+    .game-hand {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      z-index: 15;
+      background: rgba(0,0,0,0.30);
+      backdrop-filter: blur(10px);
+      padding: 12px 16px calc(var(--proto-h) + 8px);
+    }
+    .hand-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .hand-meta__label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: rgba(255,255,255,0.55);
+    }
+    .hand-cards {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .hand-cards::-webkit-scrollbar { display: none; }
+
+    /* ========================================================
+     * ACTION SHEET (bottom drawer)
+     * ======================================================== */
+    .action-sheet {
+      position: fixed;
+      bottom: 0; left: 50%; z-index: 300;
+      transform: translateX(-50%) translateY(100%);
+      width: min(100%, 430px);
+      background: var(--c-surface);
+      border-radius: var(--r-xl) var(--r-xl) 0 0;
+      box-shadow: 0 -8px 44px rgba(60,40,10,0.26);
+      padding: 0 20px calc(var(--proto-h) + 16px);
+      transition: transform 0.32s cubic-bezier(0.34,1.3,0.64,1);
+    }
+    .action-sheet.open { transform: translateX(-50%) translateY(0); }
+    .sheet-handle {
+      width: 36px; height: 4px;
+      border-radius: 2px;
+      background: rgba(0,0,0,0.12);
+      margin: 14px auto 16px;
+    }
+    .sheet-title { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+    .sheet-sub   { font-size: 14px; color: var(--c-subtle); margin-bottom: 20px; }
+
+    /* Bidding controls */
+    .bid-level-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 22px;
+      margin-bottom: 16px;
+    }
+    .stepper {
+      width: 50px; height: 50px;
+      border: 2px solid var(--c-primary-lo);
+      border-radius: 50%;
+      background: transparent;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--c-primary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .stepper:active { background: var(--c-primary-lo); }
+    .bid-level-num {
+      font-size: 52px;
+      font-weight: 900;
+      color: var(--c-text);
+      min-width: 80px;
+      text-align: center;
+      line-height: 1;
+    }
+    .trump-row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .trump-btn {
+      flex: 1;
+      padding: 12px 4px;
+      border: 2px solid transparent;
+      border-radius: var(--r-sm);
+      background: rgba(0,0,0,0.04);
+      font-size: 20px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .trump-btn span { display: block; font-size: 9px; font-weight: 700; letter-spacing: 0.04em; margin-top: 3px; }
+    .trump-btn.sel-spade   { border-color: var(--c-spade);   background: rgba(0,0,0,0.07); }
+    .trump-btn.sel-heart   { border-color: var(--c-heart);   background: rgba(192,57,43,0.07); }
+    .trump-btn.sel-diamond { border-color: var(--c-diamond); background: rgba(176,80,0,0.07); }
+    .trump-btn.sel-club    { border-color: var(--c-club);    background: rgba(26,107,58,0.07); }
+    .trump-btn.sel-nt      { border-color: var(--c-nt);      background: rgba(91,34,173,0.07); }
+    .bid-btn-row { display: flex; gap: 12px; }
+
+    /* Friend call */
+    .friend-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .friend-option {
+      padding: 14px 12px;
+      border: 2px solid rgba(0,0,0,0.07);
+      border-radius: var(--r-md);
+      background: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .friend-option.sel {
+      border-color: var(--c-primary);
+      background: var(--c-primary-lo);
+    }
+    .friend-option__name { font-size: 14px; font-weight: 700; }
+    .friend-option__hint { font-size: 12px; color: var(--c-subtle); margin-top: 1px; }
+
+    /* Play action bar */
+    .play-bar {
+      position: fixed;
+      bottom: var(--proto-h);
+      left: 50%; z-index: 400;
+      transform: translateX(-50%) translateY(100%);
+      width: min(100%, 430px);
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(14px);
+      border-top: 1px solid rgba(132,91,34,0.10);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: transform 0.22s cubic-bezier(.34,1.4,.64,1);
+    }
+    .play-bar.open { transform: translateX(-50%) translateY(0); }
+    .play-bar__info { flex: 1; }
+    .play-bar__label { font-size: 12px; color: var(--c-subtle); }
+    .play-bar__card  { font-size: 18px; font-weight: 800; margin-top: 1px; }
+
+    /* ========================================================
+     * SCREEN: RESULT
+     * ======================================================== */
+    #screen-result {
+      padding-bottom: var(--proto-h);
+      overflow-y: auto;
+    }
+    .result-hero {
+      padding: 28px 20px 20px;
+      text-align: center;
+    }
+    .result-outcome       { font-size: 60px; font-weight: 900; line-height: 1; }
+    .result-outcome--win  { color: var(--c-green); }
+    .result-outcome--lose { color: var(--c-red); }
+    .result-contract      { font-size: 17px; color: var(--c-muted); margin-top: 8px; }
+    .result-section       { padding: 0 20px 20px; }
+    .result-section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--c-primary);
+      margin-bottom: 12px;
+    }
+    .score-table {
+      background: var(--c-surface);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      box-shadow: var(--sh-sm);
+    }
+    .score-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      padding: 15px 18px;
+      font-size: 14px;
+      border-bottom: 1px solid rgba(132,91,34,0.07);
+      align-items: center;
+    }
+    .score-row:last-child { border-bottom: none; }
+    .score-row--head {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--c-subtle);
+      background: rgba(132,91,34,0.05);
+      padding: 10px 18px;
+    }
+    .score-row--win  { background: rgba(33,101,61,0.06); font-weight: 700; }
+    .score-row--lose { opacity: 0.65; }
+    .player-results {
+      background: var(--c-surface);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      box-shadow: var(--sh-sm);
+    }
+    .player-result-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      border-bottom: 1px solid rgba(132,91,34,0.07);
+      font-size: 14px;
+    }
+    .player-result-row:last-child { border-bottom: none; }
+    .player-result-row__name { font-weight: 600; }
+    .player-result-row__pts  { font-weight: 800; }
+    .result-actions { padding: 0 20px 20px; display: flex; flex-direction: column; gap: 10px; }
+
+    /* ========================================================
+     * RESPONSIVE
+     * ======================================================== */
+    @media (max-width: 374px) {
+      .trump-row { gap: 4px; }
+      .trump-btn { padding: 10px 2px; font-size: 16px; }
+      .bid-level-num { font-size: 44px; }
+      .seat-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ============================================================
+       PROTOTYPE NAVIGATION — always visible at bottom
+       ============================================================ -->
+  <nav id="proto-nav">
+    <span class="proto-label">Proto</span>
+    <button id="pnav-lobby"   onclick="go('lobby')">로비</button>
+    <button id="pnav-room"    onclick="go('room')">방 대기</button>
+    <button id="pnav-bidding" onclick="go('bidding')">입찰</button>
+    <button id="pnav-friend"  onclick="go('friend')">친구 선택</button>
+    <button id="pnav-playing" onclick="go('playing')">게임 진행</button>
+    <button id="pnav-result"  onclick="go('result')">결과</button>
+  </nav>
+
+  <!-- ============================================================
+       SCREEN: LOBBY
+       ============================================================ -->
+  <section id="screen-lobby" class="screen">
+    <header class="app-header">
+      <div class="app-header__title">마이티</div>
+      <div class="avatar">나</div>
+    </header>
+
+    <div class="lobby-body">
+      <p class="lobby-greeting">안녕하세요, Sungho님 👋</p>
+      <h1 class="lobby-heading">방 목록</h1>
+
+      <p class="section-label">현재 방 · 3개</p>
+
+      <div class="room-list">
+        <div class="room-card">
+          <div>
+            <div class="room-card__name">고수들만 모여라</div>
+            <div class="room-card__meta">호스트: 김철수 &nbsp;·&nbsp; 3/5명</div>
+          </div>
+          <button class="btn btn--primary btn--sm" onclick="go('room')">입장</button>
+        </div>
+
+        <div class="room-card">
+          <div>
+            <div class="room-card__name">마이티 한판!</div>
+            <div class="room-card__meta">호스트: 이영희 &nbsp;·&nbsp; 2/5명</div>
+          </div>
+          <button class="btn btn--primary btn--sm" onclick="go('room')">입장</button>
+        </div>
+
+        <div class="room-card">
+          <div>
+            <div class="room-card__name">친선 게임</div>
+            <div class="room-card__meta">호스트: 박지민 &nbsp;·&nbsp; 4/5명</div>
+          </div>
+          <span class="pill pill--yellow">거의 찼음</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="lobby-cta">
+      <button class="btn btn--primary btn--full" onclick="go('room')">
+        + 방 만들기
+      </button>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SCREEN: ROOM (waiting / ready)
+       ============================================================ -->
+  <section id="screen-room" class="screen">
+    <header class="app-header">
+      <button class="back-btn" onclick="go('lobby')">‹</button>
+      <div style="font-size:18px;font-weight:800;">방 대기</div>
+      <span class="pill pill--green"><span class="dot"></span>대기 중</span>
+    </header>
+
+    <div class="room-body">
+      <p style="font-size:12px;color:var(--c-subtle);margin-bottom:6px;">방 코드 · 공유하기</p>
+      <div class="room-code-row">
+        <div class="room-code">MIGHTY-4829 <span style="font-size:16px;cursor:pointer;">⎘</span></div>
+      </div>
+      <div class="room-name">고수들만 모여라</div>
+
+      <p class="section-label">플레이어 · 4/5명</p>
+
+      <div class="seat-grid">
+        <div class="room-seat is-you">
+          <div class="room-seat__num">시트 1</div>
+          <div class="room-seat__name">나 (Sungho)</div>
+          <div class="room-seat__badges">
+            <span class="pill pill--muted">나</span>
+            <span class="pill pill--muted">호스트</span>
+          </div>
+        </div>
+
+        <div class="room-seat">
+          <div class="room-seat__num">시트 2</div>
+          <div class="room-seat__name">김철수</div>
+          <div class="room-seat__badges">
+            <span class="pill pill--green"><span class="dot"></span>준비 완료</span>
+          </div>
+        </div>
+
+        <div class="room-seat">
+          <div class="room-seat__num">시트 3</div>
+          <div class="room-seat__name">이영희</div>
+          <div class="room-seat__badges">
+            <span class="pill pill--green"><span class="dot"></span>준비 완료</span>
+          </div>
+        </div>
+
+        <div class="room-seat">
+          <div class="room-seat__num">시트 4</div>
+          <div class="room-seat__name">박지민</div>
+          <div class="room-seat__badges">
+            <span class="pill pill--green"><span class="dot"></span>준비 완료</span>
+          </div>
+        </div>
+
+        <div class="room-seat empty">
+          <div class="room-seat__num">시트 5</div>
+          <div class="room-seat__name" style="color:var(--c-subtle);">대기 중…</div>
+        </div>
+      </div>
+
+      <div class="room-actions">
+        <button class="btn btn--primary btn--full" onclick="go('bidding')">
+          게임 시작 (4/5명)
+        </button>
+        <button class="btn btn--danger btn--full btn--sm">방 나가기</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SCREEN: GAME (bidding / friend / playing sub-states)
+       ============================================================ -->
+  <section id="screen-game" class="screen">
+
+    <!-- TOP BAR -->
+    <div class="game-topbar">
+      <!-- Bidding state topbar -->
+      <div id="tb-bidding" class="topbar-left">
+        <div class="topbar-block">
+          <div class="topbar-label">경매 진행</div>
+          <div class="topbar-value">현재 최고: <span id="tb-high-bid">13♠</span></div>
+        </div>
+        <div class="topbar-divider"></div>
+        <div class="topbar-block">
+          <div class="topbar-label">차례</div>
+          <div class="topbar-value" id="tb-bidder">나 (Sungho)</div>
+        </div>
+      </div>
+
+      <!-- Friend call / playing state topbar -->
+      <div id="tb-contract" class="topbar-left" style="display:none;">
+        <div class="topbar-block">
+          <div class="topbar-label">계약</div>
+          <div class="contract-badge">
+            13 <span id="tb-trump-icon" class="c-spade">♠</span>
+          </div>
+        </div>
+        <div class="topbar-divider"></div>
+        <div class="topbar-block">
+          <div class="topbar-label">선언자</div>
+          <div class="topbar-value">나 (S1)</div>
+        </div>
+        <div class="topbar-divider"></div>
+        <div class="topbar-block" id="tb-friend-block">
+          <div class="topbar-label">친구</div>
+          <div class="topbar-value" id="tb-friend">미공개</div>
+        </div>
+      </div>
+
+      <!-- Score (playing only) -->
+      <div id="tb-score" style="display:none;">
+        <div class="score-display">
+          <div class="score-team">
+            <div class="score-team__label">선언팀</div>
+            <div class="score-team__value" id="sc-decl">8</div>
+          </div>
+          <div class="score-sep">:</div>
+          <div class="score-team">
+            <div class="score-team__label">수비팀</div>
+            <div class="score-team__value" id="sc-opp">4</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABLE AREA -->
+    <div class="game-table" id="game-table">
+
+      <!-- NW: 이영희 -->
+      <div class="seat-pos seat-pos--nw">
+        <div class="seat-widget" id="sw-nw">
+          <div class="seat-widget__name">이영희</div>
+          <div class="seat-widget__sub">S3 · 10장</div>
+          <div class="seat-widget__cards" id="sw-nw-cards"><!-- backs --></div>
+        </div>
+      </div>
+
+      <!-- NE: 박지민 -->
+      <div class="seat-pos seat-pos--ne">
+        <div class="seat-widget" id="sw-ne">
+          <div class="seat-widget__name">박지민</div>
+          <div class="seat-widget__sub">S4 · 10장</div>
+          <div class="seat-widget__cards" id="sw-ne-cards"><!-- backs --></div>
+        </div>
+      </div>
+
+      <!-- W: 김철수 -->
+      <div class="seat-pos seat-pos--w">
+        <div class="seat-widget active-turn" id="sw-w">
+          <div class="seat-widget__name">김철수</div>
+          <div class="seat-widget__sub" id="sw-w-sub">S2 · 입찰 중</div>
+          <div class="seat-widget__cards" id="sw-w-cards"><!-- backs --></div>
+        </div>
+      </div>
+
+      <!-- E: 최대호 -->
+      <div class="seat-pos seat-pos--e">
+        <div class="seat-widget" id="sw-e">
+          <div class="seat-widget__name">최대호</div>
+          <div class="seat-widget__sub" id="sw-e-sub">S5 · 10장</div>
+          <div class="seat-widget__cards" id="sw-e-cards"><!-- backs --></div>
+        </div>
+      </div>
+
+      <!-- CENTER: bid display -->
+      <div class="bid-center" id="bid-center">
+        <div class="bid-center__eyebrow">최고 입찰</div>
+        <div class="bid-center__value" id="bid-center-val">13<span class="c-spade">♠</span></div>
+        <div class="bid-center__by">나 (Sungho) 제시</div>
+      </div>
+
+      <!-- CENTER: trick cards (hidden until playing) -->
+      <div class="trick-center" id="trick-center" style="display:none;">
+        <div class="trick-label-small">현재 트릭 · <span id="trick-num">3</span>/10</div>
+        <div class="trick-cards" id="trick-cards"><!-- built by JS --></div>
+      </div>
+
+      <!-- Bid history strip (bidding only) -->
+      <div class="bid-history" id="bid-history">
+        <span class="bid-history-chip pass">나: 13♠</span>
+        <span class="bid-history-chip pass">최대호: PASS</span>
+        <span class="bid-history-chip pass">이영희: PASS</span>
+        <span class="bid-history-chip pass">박지민: PASS</span>
+        <span class="bid-history-chip">김철수: ?</span>
+      </div>
+    </div>
+
+    <!-- HAND AREA -->
+    <div class="game-hand" id="game-hand">
+      <div class="hand-meta">
+        <span class="hand-meta__label">내 패 · <span id="hand-count">10</span>장</span>
+        <span id="hand-hint" style="font-size:10px;color:rgba(255,255,255,0.50);">탭하여 선택</span>
+      </div>
+      <div class="hand-cards" id="hand-cards"><!-- built by JS --></div>
+    </div>
+
+    <!-- ACTION SHEET: BIDDING -->
+    <div class="action-sheet" id="sheet-bid">
+      <div class="sheet-handle"></div>
+      <div class="sheet-title">입찰하기</div>
+      <div class="sheet-sub" id="bid-sheet-sub">현재 최고 입찰: 13♠ &nbsp;(나)</div>
+
+      <div class="bid-level-row">
+        <button class="stepper" onclick="adjustBid(-1)">−</button>
+        <div class="bid-level-num" id="bid-num">14</div>
+        <button class="stepper" onclick="adjustBid(1)">+</button>
+      </div>
+
+      <div class="trump-row">
+        <button class="trump-btn c-spade sel-spade"   data-trump="spade"   onclick="pickTrump('spade',this)">♠<span>스페이드</span></button>
+        <button class="trump-btn c-heart"              data-trump="heart"   onclick="pickTrump('heart',this)">♥<span>하트</span></button>
+        <button class="trump-btn c-diamond"            data-trump="diamond" onclick="pickTrump('diamond',this)">♦<span>다이아</span></button>
+        <button class="trump-btn c-club"               data-trump="club"    onclick="pickTrump('club',this)">♣<span>클럽</span></button>
+        <button class="trump-btn c-nt"                 data-trump="nt"      onclick="pickTrump('nt',this)">NT<span>노트럼프</span></button>
+      </div>
+
+      <div class="bid-btn-row">
+        <button class="btn btn--ghost" style="flex:1;" onclick="doPass()">패스</button>
+        <button class="btn btn--primary" style="flex:2;" id="bid-confirm-btn" onclick="doBid()">14♠ 입찰</button>
+      </div>
+    </div>
+
+    <!-- ACTION SHEET: FRIEND CALL -->
+    <div class="action-sheet" id="sheet-friend">
+      <div class="sheet-handle"></div>
+      <div class="sheet-title">친구 카드 선택</div>
+      <div class="sheet-sub">어느 카드를 가진 플레이어를 친구로 부를까요?</div>
+
+      <div class="friend-grid">
+        <div class="friend-option sel" onclick="pickFriend(this, 'A♥', '에이스 하트')">
+          <div class="card-chip joker" style="width:36px;height:50px;flex-shrink:0;">
+            <span class="rank c-heart">A</span>
+            <span class="suit c-heart">♥</span>
+          </div>
+          <div>
+            <div class="friend-option__name">A♥</div>
+            <div class="friend-option__hint">에이스 하트</div>
+          </div>
+        </div>
+        <div class="friend-option" onclick="pickFriend(this, 'A♠', '에이스 스페이드')">
+          <div class="card-chip" style="width:36px;height:50px;flex-shrink:0;">
+            <span class="rank c-spade">A</span>
+            <span class="suit c-spade">♠</span>
+          </div>
+          <div>
+            <div class="friend-option__name">A♠</div>
+            <div class="friend-option__hint">에이스 스페이드</div>
+          </div>
+        </div>
+        <div class="friend-option" onclick="pickFriend(this, 'A♦', '에이스 다이아몬드')">
+          <div class="card-chip" style="width:36px;height:50px;flex-shrink:0;">
+            <span class="rank c-diamond">A</span>
+            <span class="suit c-diamond">♦</span>
+          </div>
+          <div>
+            <div class="friend-option__name">A♦</div>
+            <div class="friend-option__hint">에이스 다이아몬드</div>
+          </div>
+        </div>
+        <div class="friend-option" onclick="pickFriend(this, '없음', '1인 선언')">
+          <div style="width:36px;height:50px;border-radius:5px;background:var(--c-primary-lo);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">🚫</div>
+          <div>
+            <div class="friend-option__name">없음</div>
+            <div class="friend-option__hint">1인 선언</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn--primary btn--full" id="friend-confirm-btn" onclick="doFriendConfirm()">A♥로 친구 선택</button>
+    </div>
+
+    <!-- PLAY ACTION BAR -->
+    <div class="play-bar" id="play-bar">
+      <div class="play-bar__info">
+        <div class="play-bar__label">선택한 카드</div>
+        <div class="play-bar__card" id="play-bar-card">—</div>
+      </div>
+      <button class="btn btn--ghost btn--sm" onclick="cancelCardSelect()">취소</button>
+      <button class="btn btn--primary" onclick="playCard()">내기</button>
+    </div>
+
+  </section>
+
+  <!-- ============================================================
+       SCREEN: RESULT
+       ============================================================ -->
+  <section id="screen-result" class="screen">
+    <header class="app-header">
+      <button class="back-btn" onclick="go('lobby')">‹</button>
+      <div style="font-size:18px;font-weight:800;">결과</div>
+      <div style="width:38px;"></div>
+    </header>
+
+    <div class="result-hero">
+      <div class="result-outcome result-outcome--win" id="result-outcome-text">승리!</div>
+      <div class="result-contract" id="result-contract-text">계약 13♠ 달성 &nbsp;·&nbsp; 15트릭 획득</div>
+    </div>
+
+    <div class="result-section">
+      <div class="result-section-title">팀 점수</div>
+      <div class="score-table">
+        <div class="score-row score-row--head">
+          <span>팀</span><span>목표</span><span>획득</span>
+        </div>
+        <div class="score-row score-row--win">
+          <span>선언팀 (나 + 박지민)</span>
+          <span>13</span>
+          <span style="color:var(--c-green);">15 ✓</span>
+        </div>
+        <div class="score-row score-row--lose">
+          <span>수비팀</span>
+          <span>—</span>
+          <span>5</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="result-section">
+      <div class="result-section-title">플레이어 점수</div>
+      <div class="player-results">
+        <div class="player-result-row">
+          <div>
+            <div class="player-result-row__name">나 (Sungho) · 선언자</div>
+            <div style="font-size:12px;color:var(--c-subtle);">선언팀</div>
+          </div>
+          <div class="player-result-row__pts" style="color:var(--c-green);">+3점</div>
+        </div>
+        <div class="player-result-row">
+          <div>
+            <div class="player-result-row__name">박지민 · 친구</div>
+            <div style="font-size:12px;color:var(--c-subtle);">선언팀</div>
+          </div>
+          <div class="player-result-row__pts" style="color:var(--c-green);">+2점</div>
+        </div>
+        <div class="player-result-row">
+          <div>
+            <div class="player-result-row__name">김철수</div>
+            <div style="font-size:12px;color:var(--c-subtle);">수비팀</div>
+          </div>
+          <div class="player-result-row__pts" style="color:var(--c-red);">−1점</div>
+        </div>
+        <div class="player-result-row">
+          <div>
+            <div class="player-result-row__name">이영희</div>
+            <div style="font-size:12px;color:var(--c-subtle);">수비팀</div>
+          </div>
+          <div class="player-result-row__pts" style="color:var(--c-red);">−1점</div>
+        </div>
+        <div class="player-result-row">
+          <div>
+            <div class="player-result-row__name">최대호</div>
+            <div style="font-size:12px;color:var(--c-subtle);">수비팀</div>
+          </div>
+          <div class="player-result-row__pts" style="color:var(--c-red);">−1점</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="result-actions">
+      <button class="btn btn--primary btn--full" onclick="go('room')">다시 하기</button>
+      <button class="btn btn--ghost btn--full"   onclick="go('lobby')">로비로 돌아가기</button>
+    </div>
+  </section>
+
+</div><!-- #app -->
+
+<script>
+/* =============================================================
+ * MOCK DATA
+ * ============================================================= */
+const HAND = [
+  { rank:'A',  suit:'spade',   sym:'♠', cls:'c-spade'   },
+  { rank:'K',  suit:'spade',   sym:'♠', cls:'c-spade'   },
+  { rank:'J',  suit:'spade',   sym:'♠', cls:'c-spade'   },
+  { rank:'9',  suit:'spade',   sym:'♠', cls:'c-spade'   },
+  { rank:'A',  suit:'heart',   sym:'♥', cls:'c-heart'   },
+  { rank:'Q',  suit:'heart',   sym:'♥', cls:'c-heart'   },
+  { rank:'K',  suit:'diamond', sym:'♦', cls:'c-diamond' },
+  { rank:'10', suit:'diamond', sym:'♦', cls:'c-diamond' },
+  { rank:'3',  suit:'club',    sym:'♣', cls:'c-club'    },
+  { rank:'★',  suit:'joker',   sym:'★', cls:''          },
+]
+
+/* In the playing mock, these 3 cards are already played by opponents */
+const TRICK_MOCK = [
+  { pos:'W',  label:'W',  playerName:'김철수', rank:'K', sym:'♥', cls:'c-heart',   played:true  },
+  { pos:'NW', label:'NW', playerName:'이영희', rank:'5', sym:'♠', cls:'c-spade',   played:true  },
+  { pos:'NE', label:'NE', playerName:'박지민', rank:'9', sym:'♥', cls:'c-heart',   played:true  },
+  { pos:'E',  label:'E',  playerName:'최대호', rank:null, sym:null, cls:null,       played:false },
+  { pos:'S',  label:'S',  playerName:'나',     rank:null, sym:null, cls:null,       played:false },
+]
+
+/* =============================================================
+ * STATE
+ * ============================================================= */
+const S = {
+  phase:          'lobby',  // current prototype screen
+  bidLevel:       14,
+  selectedTrump:  'spade',
+  selectedFriend: 'A♥',
+  selectedCardIdx: null,
+  playedCardIdxs:  new Set(),
+}
+
+/* trump display helpers */
+const TRUMP_SYM  = { spade:'♠', heart:'♥', diamond:'♦', club:'♣', nt:'NT' }
+const TRUMP_CLS  = { spade:'c-spade', heart:'c-heart', diamond:'c-diamond', club:'c-club', nt:'c-nt' }
+
+/* =============================================================
+ * NAVIGATION
+ * ============================================================= */
+function go(screen) {
+  /* close all sheets first */
+  document.querySelectorAll('.action-sheet').forEach(el => el.classList.remove('open'))
+  document.getElementById('play-bar').classList.remove('open')
+
+  S.phase = screen
+  S.selectedCardIdx = null
+
+  /* hide all screens */
+  document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'))
+  document.querySelectorAll('#proto-nav button').forEach(el => el.classList.remove('active'))
+
+  const btn = document.getElementById(`pnav-${screen}`)
+  if (btn) btn.classList.add('active')
+
+  if (['bidding','friend','playing'].includes(screen)) {
+    document.getElementById('screen-game').classList.add('active')
+    setupGameScreen(screen)
+  } else {
+    document.getElementById(`screen-${screen}`).classList.add('active')
+  }
+  window.scrollTo(0, 0)
+}
+
+/* =============================================================
+ * GAME SCREEN SETUP
+ * ============================================================= */
+function setupGameScreen(sub) {
+  const tbBid      = document.getElementById('tb-bidding')
+  const tbContract = document.getElementById('tb-contract')
+  const tbScore    = document.getElementById('tb-score')
+  const bidCenter  = document.getElementById('bid-center')
+  const trickCenter= document.getElementById('trick-center')
+  const bidHistory = document.getElementById('bid-history')
+
+  /* Calculate layout heights */
+  const topbarEl = document.querySelector('.game-topbar')
+
+  /* Render 3 face-down card backs per opponent */
+  renderOpponentBacks(sub === 'playing' ? 7 : 10)
+
+  buildHandCards(sub)
+
+  if (sub === 'bidding') {
+    /* TOP BAR */
+    tbBid.style.display       = ''
+    tbContract.style.display  = 'none'
+    tbScore.style.display     = 'none'
+    /* CENTER */
+    bidCenter.style.display   = ''
+    trickCenter.style.display = 'none'
+    bidHistory.style.display  = ''
+    /* Seat state */
+    setActiveSeat('sw-w')
+    document.getElementById('sw-w-sub').textContent = 'S2 · 입찰 중'
+    document.getElementById('hand-hint').textContent = '입찰 중 (패 참조)'
+    /* Open sheet after a beat */
+    setTimeout(() => document.getElementById('sheet-bid').classList.add('open'), 350)
+
+  } else if (sub === 'friend') {
+    tbBid.style.display       = 'none'
+    tbContract.style.display  = ''
+    tbScore.style.display     = 'none'
+    bidCenter.style.display   = ''
+    document.getElementById('bid-center-val').innerHTML = '13<span class="c-spade">♠</span>'
+    document.querySelector('#bid-center .bid-center__eyebrow').textContent = '낙찰 · 공약'
+    document.querySelector('#bid-center .bid-center__by').textContent     = '나 (Sungho) 선언'
+    trickCenter.style.display = 'none'
+    bidHistory.style.display  = 'none'
+    clearActiveSeat()
+    document.getElementById('hand-hint').textContent = '친구 선택 중'
+    setTimeout(() => document.getElementById('sheet-friend').classList.add('open'), 350)
+
+  } else if (sub === 'playing') {
+    tbBid.style.display       = 'none'
+    tbContract.style.display  = ''
+    tbScore.style.display     = ''
+    bidCenter.style.display   = 'none'
+    trickCenter.style.display = ''
+    bidHistory.style.display  = 'none'
+    document.getElementById('tb-friend').textContent = 'A♥ 박지민'
+    document.getElementById('sc-decl').textContent   = '8'
+    document.getElementById('sc-opp').textContent    = '4'
+    setActiveSeat('sw-e')
+    document.getElementById('sw-e-sub').textContent  = 'S5 · 내기 차례'
+    document.getElementById('hand-hint').textContent = '탭하여 선택'
+    buildTrickCards()
+  }
+
+  layoutGameTable()
+}
+
+/* Position the game table between topbar and hand */
+function layoutGameTable() {
+  requestAnimationFrame(() => {
+    const tb   = document.querySelector('.game-topbar')
+    const hand = document.querySelector('.game-hand')
+    const tbl  = document.getElementById('game-table')
+    if (!tb || !hand || !tbl) return
+    const topH  = tb.getBoundingClientRect().height
+    const handH = hand.getBoundingClientRect().height || 120
+    tbl.style.top    = topH + 'px'
+    tbl.style.bottom = handH + 'px'
+  })
+}
+
+function setActiveSeat(id) {
+  clearActiveSeat()
+  document.getElementById(id)?.classList.add('active-turn')
+}
+function clearActiveSeat() {
+  document.querySelectorAll('.seat-widget.active-turn').forEach(el => el.classList.remove('active-turn'))
+}
+
+/* =============================================================
+ * RENDER HELPERS
+ * ============================================================= */
+function renderOpponentBacks(count) {
+  ;['sw-nw-cards','sw-ne-cards','sw-w-cards','sw-e-cards'].forEach(id => {
+    const el = document.getElementById(id)
+    if (!el) return
+    el.innerHTML = ''
+    const show = Math.min(count, 4)
+    for (let i = 0; i < show; i++) {
+      const c = document.createElement('div')
+      c.className = 'card-chip back'
+      c.style.cssText = 'width:20px;height:28px;border-radius:3px;'
+      c.textContent = ''
+      el.appendChild(c)
+    }
+  })
+}
+
+function buildHandCards(sub) {
+  const container = document.getElementById('hand-cards')
+  container.innerHTML = ''
+  const isPlaying = sub === 'playing'
+
+  HAND.forEach((card, i) => {
+    if (S.playedCardIdxs.has(i)) return
+
+    const chip = document.createElement('div')
+    chip.className = 'card-chip'
+    if (card.suit === 'joker') chip.className += ' joker'
+
+    chip.innerHTML = `<span class="rank ${card.cls}">${card.rank}</span><span class="suit ${card.cls}">${card.sym}</span>`
+
+    if (isPlaying) {
+      chip.className += ' playable'
+      chip.addEventListener('click', () => onCardTap(i, chip, card))
+    }
+
+    if (S.selectedCardIdx === i) chip.className += ' selected'
+
+    container.appendChild(chip)
+  })
+
+  document.getElementById('hand-count').textContent = HAND.length - S.playedCardIdxs.size
+}
+
+function buildTrickCards() {
+  const container = document.getElementById('trick-cards')
+  container.innerHTML = ''
+
+  TRICK_MOCK.forEach(tc => {
+    const slot = document.createElement('div')
+    slot.className = 'trick-card-slot'
+
+    if (tc.played && tc.rank) {
+      slot.innerHTML = `
+        <div class="card-mini">
+          <span class="rank ${tc.cls}">${tc.rank}</span>
+          <span class="suit ${tc.cls}">${tc.sym}</span>
+        </div>
+        <span class="trick-pos-label">${tc.label}</span>`
+    } else {
+      slot.innerHTML = `
+        <div class="card-mini empty"></div>
+        <span class="trick-pos-label">${tc.label}</span>`
+    }
+
+    container.appendChild(slot)
+  })
+}
+
+/* =============================================================
+ * BIDDING INTERACTIONS
+ * ============================================================= */
+function adjustBid(delta) {
+  S.bidLevel = Math.max(13, Math.min(20, S.bidLevel + delta))
+  document.getElementById('bid-num').textContent = S.bidLevel
+  syncBidConfirmBtn()
+}
+
+function pickTrump(trump, btn) {
+  S.selectedTrump = trump
+  document.querySelectorAll('.trump-btn').forEach(b => {
+    b.className = b.className.replace(/sel-\w+/g, '').trim()
+  })
+  btn.classList.add(`sel-${trump}`)
+  syncBidConfirmBtn()
+}
+
+function syncBidConfirmBtn() {
+  const sym = TRUMP_SYM[S.selectedTrump]
+  const btn = document.getElementById('bid-confirm-btn')
+  if (btn) btn.textContent = `${S.bidLevel}${sym} 입찰`
+}
+
+function doPass() {
+  document.getElementById('sheet-bid').classList.remove('open')
+  setTimeout(() => go('friend'), 300)
+}
+
+function doBid() {
+  const sym = TRUMP_SYM[S.selectedTrump]
+  const cls = TRUMP_CLS[S.selectedTrump]
+  document.getElementById('bid-center-val').innerHTML =
+    `${S.bidLevel}<span class="${cls}">${sym}</span>`
+  document.getElementById('tb-high-bid').innerHTML =
+    `${S.bidLevel}<span class="${cls}">${sym}</span>`
+  document.getElementById('sheet-bid').classList.remove('open')
+  setTimeout(() => go('friend'), 300)
+}
+
+/* =============================================================
+ * FRIEND CALL INTERACTIONS
+ * ============================================================= */
+function pickFriend(el, name, hint) {
+  document.querySelectorAll('.friend-option').forEach(e => e.classList.remove('sel'))
+  el.classList.add('sel')
+  S.selectedFriend = name
+  const btn = document.getElementById('friend-confirm-btn')
+  if (btn) btn.textContent = name === '없음' ? '1인 선언' : `${name}로 친구 선택`
+}
+
+function doFriendConfirm() {
+  document.getElementById('sheet-friend').classList.remove('open')
+  setTimeout(() => go('playing'), 300)
+}
+
+/* =============================================================
+ * CARD PLAY INTERACTIONS
+ * ============================================================= */
+function onCardTap(idx, chipEl, card) {
+  if (S.selectedCardIdx === idx) {
+    cancelCardSelect()
+    return
+  }
+
+  /* deselect previous */
+  document.querySelectorAll('.card-chip.selected').forEach(c => c.classList.remove('selected'))
+
+  S.selectedCardIdx = idx
+  chipEl.classList.add('selected')
+
+  const label = card.suit === 'joker' ? '조커' : `${card.rank}${card.sym}`
+  document.getElementById('play-bar-card').innerHTML =
+    `<span class="${card.cls}">${label}</span>`
+  document.getElementById('play-bar').classList.add('open')
+}
+
+function cancelCardSelect() {
+  document.querySelectorAll('.card-chip.selected').forEach(c => c.classList.remove('selected'))
+  S.selectedCardIdx = null
+  document.getElementById('play-bar').classList.remove('open')
+}
+
+function playCard() {
+  if (S.selectedCardIdx === null) return
+
+  S.playedCardIdxs.add(S.selectedCardIdx)
+
+  /* Update trick display: fill 'S' slot */
+  const card = HAND[S.selectedCardIdx]
+  const sSlot = TRICK_MOCK.find(t => t.pos === 'S')
+  if (sSlot) {
+    sSlot.played = true
+    sSlot.rank   = card.rank
+    sSlot.sym    = card.sym
+    sSlot.cls    = card.cls
+  }
+
+  buildTrickCards()
+  cancelCardSelect()
+  buildHandCards('playing')
+
+  /* Advance trick number (mock) */
+  const tn = parseInt(document.getElementById('trick-num').textContent, 10)
+  if (tn < 10) document.getElementById('trick-num').textContent = tn + 1
+
+  /* Update scores (mock) */
+  const d = parseInt(document.getElementById('sc-decl').textContent, 10)
+  document.getElementById('sc-decl').textContent = d + 1
+}
+
+/* =============================================================
+ * INIT
+ * ============================================================= */
+go('lobby')
+
+/* Re-layout game table on resize (e.g., dev tools viewport change) */
+window.addEventListener('resize', () => {
+  if (S.phase === 'bidding' || S.phase === 'friend' || S.phase === 'playing') {
+    layoutGameTable()
+  }
+})
+</script>
+</body>
+</html>

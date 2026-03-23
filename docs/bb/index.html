@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>BB 페이지 선택</title>
+  <title>BB 원본 페이지</title>
   <style>
     body{margin:0;font-family: -apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:#f4efe6;color:#2f2618;padding:16px}
     .wrap{max-width:420px;margin:0 auto}
@@ -18,20 +18,16 @@
 <body>
   <div class="wrap">
     <h1>BB 미리보기 페이지</h1>
-    <p class="muted">이전 UI와 새 시퀀스 UI가 뒤섞여 보여서 헷갈렸던 부분을 분리했어요. 아래에서 원하는 화면으로 바로 들어가세요.</p>
+    <p class="muted">요청하신 손안댄(원본) 파일을 우선 노출하고, 필요 시 새 시퀀스 미리보기로 이동하세요.</p>
     <div class="card">
-      <div class="muted">추천: 이전에 보던 UI</div>
-      <a class="btn" href="./gameui.html">game-ui 기본</a>
+      <div class="muted">원본(손안댄) UI</div>
+      <a class="btn primary" href="./game-ui-original.html">원본 game-ui 열기</a>
+      <a class="btn" href="./gameui.html">현재 유지본(gameui)</a>
     </div>
     <div class="card">
-      <div class="muted">요청한 시퀀스 미리보기 (버리기→친구콜→플레잉)</div>
-      <a class="btn primary" href="./bb-button.html">sequence preview</a>
-      <a class="btn" href="./preview.html">same url preview</a>
-    </div>
-    <div class="card">
-      <div class="muted">직접 링크</div>
-      <a class="btn" href="./index.html?v=legacy">gameui(위)</a>
-      <a class="btn" href="./bb-button.html?v=seq">시퀀스</a>
+      <div class="muted">시퀀스 미리보기</div>
+      <a class="btn" href="./bb-button.html">버리기-친구콜 시퀀스</a>
+      <a class="btn" href="./preview.html">동일 페이지(preview)</a>
     </div>
   </div>
 </body>
