@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>BB 원본 페이지</title>
+  <title>BB 미리보기 페이지</title>
   <style>
     body{margin:0;font-family: -apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:#f4efe6;color:#2f2618;padding:16px}
     .wrap{max-width:420px;margin:0 auto}
@@ -18,17 +18,22 @@
 <body>
   <div class="wrap">
     <h1>BB 미리보기 페이지</h1>
-    <p class="muted">요청하신 손안댄(원본) 파일을 우선 노출하고, 필요 시 새 시퀀스 미리보기로 이동하세요.</p>
+    <p class="muted">게임 UI와 디버그 UI를 분리해서 운영합니다.</p>
+
     <div class="card">
-      <div class="muted">실행 UI( friend-call 기반 )</div>
-      <a class="btn primary" href="./friend-call-execution.html">실행 UI 열기</a>
-      <a class="btn" href="./gameui.html">현재 유지본(gameui)</a>
+      <div class="muted">게임 UI (최종)</div>
+      <a class="btn primary" href="./gameui.html">게임 UI 열기</a>
     </div>
+
     <div class="card">
-      <div class="muted">시퀀스 미리보기</div>
-      <a class="btn" href="./bb-button.html">버리기-친구콜 시퀀스 (구버튼 링크)</a>
-      <a class="btn" href="./preview.html">동일 페이지(preview)</a>
+      <div class="muted">디버그 UI (개발/확인용)</div>
+      <a class="btn" href="./game-ui-debug.html">디버그 UI 열기</a>
+    </div>
+
+    <div class="card">
+      <div class="muted">기타</div>
       <a class="btn" href="./discard-original.html">discard 화면(원본)</a>
+      <a class="btn" href="./friend-call-execution.html">친구콜 실행 단독</a>
     </div>
   </div>
 </body>

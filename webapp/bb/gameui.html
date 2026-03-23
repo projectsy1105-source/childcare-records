@@ -40,13 +40,10 @@
       --sat: env(safe-area-inset-top, 44px);
       --sab: env(safe-area-inset-bottom, 34px);
 
-      /* Prototype nav chrome at bottom */
-      --proto-h: calc(var(--sab) + 52px);
+      --proto-h: calc(var(--sab) + 12px);
     }
 
-    /* ========================================================
-     * RESET & BASE
-     * ======================================================== */
+    /* RESET & BASE */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
@@ -60,9 +57,7 @@
 
     button { font-family: inherit; }
 
-    /* ========================================================
-     * APP SHELL — max-width container, centered
-     * ======================================================== */
+    /* APP SHELL */
     #app {
       max-width: 430px;
       margin: 0 auto;
@@ -70,9 +65,6 @@
       min-height: 100vh;
     }
 
-    /* ========================================================
-     * SCREEN SYSTEM
-     * ======================================================== */
     .screen {
       display: none;
       flex-direction: column;
@@ -80,57 +72,7 @@
     }
     .screen.active { display: flex; }
 
-    /* ========================================================
-     * PROTOTYPE CHROME — fixed at bottom, dark pill row
-     * ======================================================== */
-    #proto-nav {
-      position: fixed;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: min(100%, 430px);
-      z-index: 9999;
-      background: rgba(20,16,12,0.93);
-      backdrop-filter: blur(16px);
-      border-top: 1px solid rgba(255,255,255,0.08);
-      padding: 8px 12px calc(var(--sab) + 4px);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
-    #proto-nav::-webkit-scrollbar { display: none; }
-    #proto-nav .proto-label {
-      color: rgba(255,255,255,0.35);
-      font-size: 9px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      flex-shrink: 0;
-    }
-    #proto-nav button {
-      flex-shrink: 0;
-      padding: 6px 11px;
-      border: 1px solid rgba(255,255,255,0.14);
-      border-radius: 8px;
-      background: transparent;
-      color: rgba(255,255,255,0.6);
-      font-size: 11px;
-      font-weight: 600;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.15s;
-    }
-    #proto-nav button.active {
-      background: var(--c-primary);
-      border-color: var(--c-primary);
-      color: #fff;
-    }
-
-    /* ========================================================
-     * COMMON HEADER
-     * ======================================================== */
+    /* COMMON HEADER */
     .app-header {
       position: sticky;
       top: 0;
@@ -177,29 +119,7 @@
       justify-content: center;
     }
 
-    /* ========================================================
-     * PILL / BADGE
-     * ======================================================== */
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 4px 10px;
-      border-radius: var(--r-pill);
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .pill--muted   { background: var(--c-primary-lo); color: var(--c-primary); }
-    .pill--green   { background: rgba(33,101,61,0.12); color: var(--c-green); }
-    .pill--red     { background: rgba(192,57,43,0.12); color: var(--c-red); }
-    .pill--yellow  { background: rgba(195,132,17,0.14); color: #8c5d00; }
-    .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
-
-    /* ========================================================
-     * BUTTONS
-     * ======================================================== */
+    /* BUTTONS */
     .btn {
       display: inline-flex;
       align-items: center;
@@ -222,9 +142,25 @@
     .btn--full    { width: 100%; }
     .btn:disabled { opacity: 0.38; cursor: not-allowed; }
 
-    /* ========================================================
-     * CARD CHIP — your hand cards
-     * ======================================================== */
+    /* PILL / BADGE */
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: var(--r-pill);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .pill--muted   { background: var(--c-primary-lo); color: var(--c-primary); }
+    .pill--green   { background: rgba(33,101,61,0.12); color: var(--c-green); }
+    .pill--red     { background: rgba(192,57,43,0.12); color: var(--c-red); }
+    .pill--yellow  { background: rgba(195,132,17,0.14); color: #8c5d00; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+
+    /* CARD CHIP */
     .card-chip {
       width: 42px;
       height: 58px;
@@ -260,7 +196,7 @@
     }
     .card-chip.joker .rank { font-size: 9px; }
 
-    /* Mini card — trick center display */
+    /* Mini card */
     .card-mini {
       width: 34px;
       height: 46px;
@@ -289,9 +225,7 @@
     .c-club    { color: var(--c-club); }
     .c-nt      { color: var(--c-nt); }
 
-    /* ========================================================
-     * SEAT WIDGET — small opponent info card
-     * ======================================================== */
+    /* SEAT WIDGET */
     .seat-widget {
       background: rgba(255,255,255,0.88);
       border-radius: var(--r-md);
@@ -327,104 +261,7 @@
       to   { box-shadow: 0 0 0 6px rgba(132,91,34,0.18), var(--sh-sm); }
     }
 
-    /* ========================================================
-     * SCREEN: LOBBY
-     * ======================================================== */
-    #screen-lobby {
-      padding-bottom: var(--proto-h);
-    }
-    .lobby-body {
-      padding: 20px 20px 100px;
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-    }
-    .lobby-greeting { font-size: 13px; color: var(--c-subtle); margin-bottom: 2px; }
-    .lobby-heading  { font-size: 30px; font-weight: 900; line-height: 1.05; margin-bottom: 24px; }
-    .section-label {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.09em;
-      color: var(--c-primary);
-      margin-bottom: 12px;
-    }
-    .room-list { display: flex; flex-direction: column; gap: 10px; }
-    .room-card {
-      background: var(--c-surface);
-      border-radius: var(--r-lg);
-      padding: 18px 20px;
-      box-shadow: var(--sh-sm);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-    .room-card__name { font-size: 16px; font-weight: 700; }
-    .room-card__meta { font-size: 13px; color: var(--c-muted); margin-top: 4px; }
-    .lobby-cta {
-      position: fixed;
-      bottom: var(--proto-h);
-      left: 50%;
-      transform: translateX(-50%);
-      width: calc(min(100%, 430px) - 40px);
-      z-index: 90;
-      padding-bottom: 0;
-    }
-    .lobby-cta .btn { box-shadow: var(--sh-lg); }
-
-    /* ========================================================
-     * SCREEN: ROOM
-     * ======================================================== */
-    #screen-room { padding-bottom: var(--proto-h); }
-    .room-body { padding: 20px; display: flex; flex-direction: column; gap: 0; }
-    .room-code-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-    .room-code {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 9px 16px;
-      background: var(--c-primary-lo);
-      border-radius: var(--r-sm);
-      font-size: 20px;
-      font-weight: 900;
-      letter-spacing: 0.1em;
-      color: var(--c-primary);
-    }
-    .room-name { font-size: 22px; font-weight: 800; margin-bottom: 20px; }
-    .seat-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 24px;
-    }
-    .room-seat {
-      background: var(--c-surface);
-      border-radius: var(--r-lg);
-      padding: 16px;
-      box-shadow: var(--sh-sm);
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      min-height: 96px;
-    }
-    .room-seat.empty {
-      background: rgba(132,91,34,0.04);
-      box-shadow: none;
-      border: 1.5px dashed rgba(132,91,34,0.16);
-    }
-    .room-seat.is-you {
-      border: 2px solid var(--c-primary);
-      background: rgba(132,91,34,0.07);
-    }
-    .room-seat__num  { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--c-primary); opacity: 0.7; }
-    .room-seat__name { font-size: 16px; font-weight: 700; }
-    .room-seat__badges { display: flex; flex-wrap: wrap; gap: 5px; }
-    .room-actions { display: flex; flex-direction: column; gap: 10px; }
-
-    /* ========================================================
-     * SCREEN: GAME
-     * ======================================================== */
+    /* SCREEN: GAME */
     #screen-game {
       height: 100vh;
       overflow: hidden;
@@ -432,7 +269,6 @@
       background: radial-gradient(circle at 30% 20%, #c8a878 0%, #b8966a 50%, #a07c50 100%);
     }
 
-    /* Top info bar */
     .game-topbar {
       position: absolute;
       top: 0; left: 0; right: 0;
@@ -479,21 +315,18 @@
     .score-team__value { font-size: 24px; font-weight: 900; color: #fff; line-height: 1; }
     .score-sep { font-size: 14px; color: rgba(255,255,255,0.35); }
 
-    /* Table surface (excludes topbar & hand) */
     .game-table {
       position: absolute;
       left: 0; right: 0;
       z-index: 5;
     }
 
-    /* Seat positions */
     .seat-pos { position: absolute; }
     .seat-pos--nw { top: 16px; left: 12px; }
     .seat-pos--ne { top: 16px; right: 12px; }
     .seat-pos--w  { top: 50%; left: 8px;  transform: translateY(-50%); }
     .seat-pos--e  { top: 50%; right: 8px; transform: translateY(-50%); }
 
-    /* Trick center */
     .trick-center {
       position: absolute;
       top: 50%; left: 50%;
@@ -528,7 +361,6 @@
       color: rgba(255,255,255,0.50);
     }
 
-    /* Bid center display */
     .bid-center {
       position: absolute;
       top: 50%; left: 50%;
@@ -557,7 +389,6 @@
     }
     .bid-center__by { font-size: 12px; color: var(--c-subtle); margin-top: 6px; }
 
-    /* Bid history chips */
     .bid-history {
       position: absolute;
       bottom: 16px; left: 0; right: 0;
@@ -577,7 +408,6 @@
     }
     .bid-history-chip.pass { text-decoration: line-through; opacity: 0.55; }
 
-    /* Hand area at bottom of game screen */
     .game-hand {
       position: absolute;
       bottom: 0; left: 0; right: 0;
@@ -601,17 +431,35 @@
     }
     .hand-cards {
       display: flex;
-      gap: 6px;
+      gap: 0;
       overflow-x: auto;
       padding-bottom: 2px;
+      padding-left: 8px;
       scrollbar-width: none;
       -webkit-overflow-scrolling: touch;
     }
     .hand-cards::-webkit-scrollbar { display: none; }
+    .hand-cards .card-chip {
+      width: 52px;
+      height: 72px;
+      margin-left: -14px;
+      flex-shrink: 0;
+      transition: transform 0.15s, margin-top 0.15s;
+      cursor: pointer;
+    }
+    .hand-cards .card-chip:first-child { margin-left: 0; }
+    .hand-cards .card-chip .rank { font-size: 14px; }
+    .hand-cards .card-chip .suit { font-size: 18px; }
+    .hand-cards .card-chip.selected {
+      transform: translateY(-12px);
+      z-index: 10;
+      box-shadow: 0 4px 14px rgba(132,91,34,0.30);
+    }
+    .hand-cards .card-chip.playable:active {
+      transform: translateY(-8px);
+    }
 
-    /* ========================================================
-     * ACTION SHEET (bottom drawer)
-     * ======================================================== */
+    /* ACTION SHEET */
     .action-sheet {
       position: fixed;
       bottom: 0; left: 50%; z-index: 300;
@@ -633,7 +481,6 @@
     .sheet-title { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
     .sheet-sub   { font-size: 14px; color: var(--c-subtle); margin-bottom: 20px; }
 
-    /* Bidding controls */
     .bid-level-row {
       display: flex;
       align-items: center;
@@ -689,21 +536,21 @@
     .trump-btn.sel-nt      { border-color: var(--c-nt);      background: rgba(91,34,173,0.07); }
     .bid-btn-row { display: flex; gap: 12px; }
 
-    /* Friend call */
-    .friend-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+    .friend-list {
+      display: flex;
+      flex-direction: column;
       gap: 10px;
       margin-bottom: 20px;
     }
     .friend-option {
-      padding: 14px 12px;
+      padding: 14px 16px;
       border: 2px solid rgba(0,0,0,0.07);
       border-radius: var(--r-md);
       background: #fff;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
+      width: 100%;
       cursor: pointer;
       transition: all 0.15s;
       -webkit-tap-highlight-color: transparent;
@@ -715,7 +562,6 @@
     .friend-option__name { font-size: 14px; font-weight: 700; }
     .friend-option__hint { font-size: 12px; color: var(--c-subtle); margin-top: 1px; }
 
-    /* Play action bar */
     .play-bar {
       position: fixed;
       bottom: var(--proto-h);
@@ -736,9 +582,7 @@
     .play-bar__label { font-size: 12px; color: var(--c-subtle); }
     .play-bar__card  { font-size: 18px; font-weight: 800; margin-top: 1px; }
 
-    /* ========================================================
-     * SCREEN: RESULT
-     * ======================================================== */
+    /* SCREEN: RESULT */
     #screen-result {
       padding-bottom: var(--proto-h);
       overflow-y: auto;
@@ -805,33 +649,63 @@
     .player-result-row__pts  { font-weight: 800; }
     .result-actions { padding: 0 20px 20px; display: flex; flex-direction: column; gap: 10px; }
 
-    /* ========================================================
-     * RESPONSIVE
-     * ======================================================== */
     @media (max-width: 374px) {
       .trump-row { gap: 4px; }
       .trump-btn { padding: 10px 2px; font-size: 16px; }
       .bid-level-num { font-size: 44px; }
       .seat-grid { grid-template-columns: 1fr; }
     }
+
+    /* FRIEND OPTION VARIANTS */
+    .friend-option.mighty { border-color: var(--c-red); background: rgba(192,57,43,0.06); }
+    .friend-option.mighty.sel { border-color: var(--c-red); background: rgba(192,57,43,0.12); }
+    .friend-option.joker-opt { border-color: var(--c-nt); background: rgba(91,34,173,0.06); }
+    .friend-option.joker-opt.sel { border-color: var(--c-nt); background: rgba(91,34,173,0.12); }
+    .friend-option.card-pick-opt.has-card { border-color: var(--c-primary); }
+    .friend-option.card-pick-opt.has-card.sel { background: var(--c-primary-lo); }
+
+    /* CARD PICK SHEET (#sheet-card-pick) */
+    .friend-card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .friend-card-opt {
+      padding: 14px 8px;
+      border: 2px solid rgba(0,0,0,0.07);
+      border-radius: var(--r-md);
+      background: #fff;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .friend-card-opt.sel {
+      border-color: var(--c-primary);
+      background: var(--c-primary-lo);
+    }
+    .friend-card-opt__card { font-size: 24px; font-weight: 800; }
+    .friend-card-opt__label { font-size: 11px; color: var(--c-subtle); margin-top: 4px; }
+    .friend-section-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--c-subtle);
+      margin-bottom: 8px;
+      text-align: left;
+    }
   </style>
 </head>
 <body>
-
+<!-- 단계: 친구 선언 화면 (friend) -->
 <div id="app">
 
   <!-- ============================================================
        PROTOTYPE NAVIGATION — always visible at bottom
        ============================================================ -->
-  <nav id="proto-nav">
-    <span class="proto-label">Proto</span>
-    <button id="pnav-lobby"   onclick="go('lobby')">로비</button>
-    <button id="pnav-room"    onclick="go('room')">방 대기</button>
-    <button id="pnav-bidding" onclick="go('bidding')">입찰</button>
-    <button id="pnav-friend"  onclick="go('friend')">친구 선택</button>
-    <button id="pnav-playing" onclick="go('playing')">게임 진행</button>
-    <button id="pnav-result"  onclick="go('result')">결과</button>
-  </nav>
+  
 
   <!-- ============================================================
        SCREEN: LOBBY
@@ -1109,47 +983,89 @@
       <div class="sheet-title">친구 카드 선택</div>
       <div class="sheet-sub">어느 카드를 가진 플레이어를 친구로 부를까요?</div>
 
-      <div class="friend-grid">
-        <div class="friend-option sel" onclick="pickFriend(this, 'A♥', '에이스 하트')">
-          <div class="card-chip joker" style="width:36px;height:50px;flex-shrink:0;">
-            <span class="rank c-heart">A</span>
-            <span class="suit c-heart">♥</span>
-          </div>
-          <div>
-            <div class="friend-option__name">A♥</div>
-            <div class="friend-option__hint">에이스 하트</div>
-          </div>
-        </div>
-        <div class="friend-option" onclick="pickFriend(this, 'A♠', '에이스 스페이드')">
-          <div class="card-chip" style="width:36px;height:50px;flex-shrink:0;">
-            <span class="rank c-spade">A</span>
-            <span class="suit c-spade">♠</span>
-          </div>
-          <div>
-            <div class="friend-option__name">A♠</div>
-            <div class="friend-option__hint">에이스 스페이드</div>
-          </div>
-        </div>
-        <div class="friend-option" onclick="pickFriend(this, 'A♦', '에이스 다이아몬드')">
+      <div class="friend-list" id="friend-list">
+        <!-- 1. 마이티 -->
+        <div class="friend-option mighty" onclick="pickFriend(this, 'A♦', '마이티')">
           <div class="card-chip" style="width:36px;height:50px;flex-shrink:0;">
             <span class="rank c-diamond">A</span>
             <span class="suit c-diamond">♦</span>
           </div>
           <div>
-            <div class="friend-option__name">A♦</div>
-            <div class="friend-option__hint">에이스 다이아몬드</div>
+            <div class="friend-option__name">마이티</div>
+            <div class="friend-option__hint">다이아 에이스 (♦A)</div>
           </div>
         </div>
+        <!-- 2. 조커 -->
+        <div class="friend-option joker-opt" onclick="pickFriend(this, '조커', '조커')">
+          <div class="card-chip joker" style="width:36px;height:50px;flex-shrink:0;">
+            <span class="rank">★</span>
+            <span class="suit">★</span>
+          </div>
+          <div>
+            <div class="friend-option__name">조커</div>
+            <div class="friend-option__hint">조커를 가진 플레이어</div>
+          </div>
+        </div>
+        <!-- 3. 카드 선택 -->
+        <div class="friend-option card-pick-opt" onclick="openCardPick()">
+          <div style="width:36px;height:50px;border-radius:5px;background:var(--c-primary-lo);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;" id="card-pick-icon">🃏</div>
+          <div>
+            <div class="friend-option__name" id="card-pick-label">카드 선택</div>
+            <div class="friend-option__hint" id="card-pick-hint">특정 카드 지정</div>
+          </div>
+        </div>
+        <!-- 4. 없음 -->
         <div class="friend-option" onclick="pickFriend(this, '없음', '1인 선언')">
           <div style="width:36px;height:50px;border-radius:5px;background:var(--c-primary-lo);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">🚫</div>
           <div>
             <div class="friend-option__name">없음</div>
-            <div class="friend-option__hint">1인 선언</div>
+            <div class="friend-option__hint">1인 선언 (노프렌드)</div>
           </div>
         </div>
       </div>
 
-      <button class="btn btn--primary btn--full" id="friend-confirm-btn" onclick="doFriendConfirm()">A♥로 친구 선택</button>
+      <button class="btn btn--primary btn--full" id="friend-confirm-btn" onclick="doFriendConfirm()" disabled>친구 선택</button>
+    </div>
+
+    <!-- ACTION SHEET: CARD PICK (for 카드 선택) -->
+    <div class="action-sheet" id="sheet-card-pick">
+      <div class="sheet-handle"></div>
+      <div class="sheet-title">친구 카드 선택</div>
+      <div class="sheet-sub">친구로 부를 카드를 선택하세요</div>
+
+      <div class="friend-section-label" id="card-pick-trump-title">공약 수트 (♠ 스페이드)</div>
+      <div class="friend-card-grid" id="card-pick-trump">
+        <div class="friend-card-opt" onclick="pickCard(this, 'A♠')">
+          <div class="friend-card-opt__card c-spade">A♠</div>
+          <div class="friend-card-opt__label">에이스</div>
+        </div>
+        <div class="friend-card-opt" onclick="pickCard(this, 'K♠')">
+          <div class="friend-card-opt__card c-spade">K♠</div>
+          <div class="friend-card-opt__label">킹</div>
+        </div>
+        <div class="friend-card-opt" onclick="pickCard(this, 'Q♠')">
+          <div class="friend-card-opt__card c-spade">Q♠</div>
+          <div class="friend-card-opt__label">퀸</div>
+        </div>
+      </div>
+
+      <div class="friend-section-label" id="card-pick-other-title">다른 수트 에이스 (마이티 제외)</div>
+      <div class="friend-card-grid" id="card-pick-other">
+        <div class="friend-card-opt" onclick="pickCard(this, 'K♥')">
+          <div class="friend-card-opt__card c-heart">K♥</div>
+          <div class="friend-card-opt__label">하트</div>
+        </div>
+        <div class="friend-card-opt" onclick="pickCard(this, 'K♦')">
+          <div class="friend-card-opt__card c-diamond">K♦</div>
+          <div class="friend-card-opt__label">다이아</div>
+        </div>
+        <div class="friend-card-opt" onclick="pickCard(this, 'K♣')">
+          <div class="friend-card-opt__card c-club">K♣</div>
+          <div class="friend-card-opt__label">클럽</div>
+        </div>
+      </div>
+
+      <button class="btn btn--ghost btn--full" onclick="closeCardPick()">돌아가기</button>
     </div>
 
     <!-- PLAY ACTION BAR -->
@@ -1246,7 +1162,6 @@
   </section>
 
 </div><!-- #app -->
-
 <script>
 /* =============================================================
  * MOCK DATA
@@ -1264,7 +1179,6 @@ const HAND = [
   { rank:'★',  suit:'joker',   sym:'★', cls:''          },
 ]
 
-/* In the playing mock, these 3 cards are already played by opponents */
 const TRICK_MOCK = [
   { pos:'W',  label:'W',  playerName:'김철수', rank:'K', sym:'♥', cls:'c-heart',   played:true  },
   { pos:'NW', label:'NW', playerName:'이영희', rank:'5', sym:'♠', cls:'c-spade',   played:true  },
@@ -1273,52 +1187,38 @@ const TRICK_MOCK = [
   { pos:'S',  label:'S',  playerName:'나',     rank:null, sym:null, cls:null,       played:false },
 ]
 
-/* =============================================================
- * STATE
- * ============================================================= */
 const S = {
-  phase:          'lobby',  // current prototype screen
+  phase:          'init',
   bidLevel:       14,
   selectedTrump:  'spade',
-  selectedFriend: 'A♥',
+  selectedFriend: '',
+  selectedFriendLabel: null,
   selectedCardIdx: null,
   playedCardIdxs:  new Set(),
 }
 
-/* trump display helpers */
 const TRUMP_SYM  = { spade:'♠', heart:'♥', diamond:'♦', club:'♣', nt:'NT' }
 const TRUMP_CLS  = { spade:'c-spade', heart:'c-heart', diamond:'c-diamond', club:'c-club', nt:'c-nt' }
 
-/* =============================================================
- * NAVIGATION
- * ============================================================= */
 function go(screen) {
-  /* close all sheets first */
   document.querySelectorAll('.action-sheet').forEach(el => el.classList.remove('open'))
-  document.getElementById('play-bar').classList.remove('open')
-
+  const pb = document.getElementById('play-bar')
+  if (pb) pb.classList.remove('open')
   S.phase = screen
   S.selectedCardIdx = null
 
-  /* hide all screens */
   document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'))
-  document.querySelectorAll('#proto-nav button').forEach(el => el.classList.remove('active'))
 
-  const btn = document.getElementById(`pnav-${screen}`)
-  if (btn) btn.classList.add('active')
-
-  if (['bidding','friend','playing'].includes(screen)) {
-    document.getElementById('screen-game').classList.add('active')
+  if (['bidding','friend','playing','kitty','discard'].includes(screen)) {
+    const gameScreen = document.getElementById('screen-game')
+    if (gameScreen) gameScreen.classList.add('active')
     setupGameScreen(screen)
   } else {
-    document.getElementById(`screen-${screen}`).classList.add('active')
+    const s = document.getElementById(`screen-${screen}`)
+    if (s) s.classList.add('active')
   }
-  window.scrollTo(0, 0)
 }
 
-/* =============================================================
- * GAME SCREEN SETUP
- * ============================================================= */
 function setupGameScreen(sub) {
   const tbBid      = document.getElementById('tb-bidding')
   const tbContract = document.getElementById('tb-contract')
@@ -1327,64 +1227,99 @@ function setupGameScreen(sub) {
   const trickCenter= document.getElementById('trick-center')
   const bidHistory = document.getElementById('bid-history')
 
-  /* Calculate layout heights */
-  const topbarEl = document.querySelector('.game-topbar')
-
-  /* Render 3 face-down card backs per opponent */
   renderOpponentBacks(sub === 'playing' ? 7 : 10)
-
   buildHandCards(sub)
 
   if (sub === 'bidding') {
-    /* TOP BAR */
-    tbBid.style.display       = ''
-    tbContract.style.display  = 'none'
-    tbScore.style.display     = 'none'
-    /* CENTER */
-    bidCenter.style.display   = ''
-    trickCenter.style.display = 'none'
-    bidHistory.style.display  = ''
-    /* Seat state */
+    if(tbBid) tbBid.style.display       = ''
+    if(tbContract) tbContract.style.display  = 'none'
+    if(tbScore) tbScore.style.display     = 'none'
+    if(bidCenter) bidCenter.style.display   = ''
+    if(trickCenter) trickCenter.style.display = 'none'
+    if(bidHistory) bidHistory.style.display  = ''
     setActiveSeat('sw-w')
-    document.getElementById('sw-w-sub').textContent = 'S2 · 입찰 중'
-    document.getElementById('hand-hint').textContent = '입찰 중 (패 참조)'
-    /* Open sheet after a beat */
-    setTimeout(() => document.getElementById('sheet-bid').classList.add('open'), 350)
-
+    const sww = document.getElementById('sw-w-sub'); if(sww) sww.textContent = 'S2 · 입찰 중'
+    const hh = document.getElementById('hand-hint'); if(hh) hh.textContent = '입찰 중 (패 참조)'
+    setTimeout(() => { const sb = document.getElementById('sheet-bid'); if(sb) sb.classList.add('open') }, 350)
   } else if (sub === 'friend') {
-    tbBid.style.display       = 'none'
-    tbContract.style.display  = ''
-    tbScore.style.display     = 'none'
-    bidCenter.style.display   = ''
-    document.getElementById('bid-center-val').innerHTML = '13<span class="c-spade">♠</span>'
-    document.querySelector('#bid-center .bid-center__eyebrow').textContent = '낙찰 · 공약'
-    document.querySelector('#bid-center .bid-center__by').textContent     = '나 (Sungho) 선언'
-    trickCenter.style.display = 'none'
-    bidHistory.style.display  = 'none'
+    if(tbBid) tbBid.style.display       = 'none'
+    if(tbContract) tbContract.style.display  = ''
+    if(tbScore) tbScore.style.display     = 'none'
+    if(bidCenter) bidCenter.style.display   = ''
+    const bcv = document.getElementById('bid-center-val'); if(bcv) bcv.innerHTML = '13<span class="c-spade">♠</span>'
+    const bce = document.querySelector('#bid-center .bid-center__eyebrow'); if(bce) bce.textContent = '낙찰 · 공약'
+    const bcb = document.querySelector('#bid-center .bid-center__by'); if(bcb) bcb.textContent = '나 (Sungho) 선언'
+    if(trickCenter) trickCenter.style.display = 'none'
+    if(bidHistory) bidHistory.style.display  = 'none'
     clearActiveSeat()
-    document.getElementById('hand-hint').textContent = '친구 선택 중'
-    setTimeout(() => document.getElementById('sheet-friend').classList.add('open'), 350)
+    const hh = document.getElementById('hand-hint'); if(hh) hh.textContent = '친구 선택 중'
 
+    // 초기화: 마이티/조커/카드선택 하이라이트 제거
+    document.querySelectorAll('.friend-option').forEach(e => e.classList.remove('sel'))
+    document.querySelectorAll('.friend-card-opt').forEach(e => e.classList.remove('sel'))
+    const fp = document.querySelector('.friend-option.card-pick-opt')
+    if (fp) fp.classList.remove('sel', 'has-card')
+    const lbl = document.getElementById('card-pick-label')
+    const hnt = document.getElementById('card-pick-hint')
+    if (lbl) lbl.textContent = '카드 선택'
+    if (hnt) hnt.textContent = '특정 카드 지정'
+    const fc = document.getElementById('friend-confirm-btn')
+    if (fc) { fc.disabled = true; fc.textContent = '친구 선택' }
+    S.selectedFriend = ''
+    S.selectedFriendLabel = null
+    updateFriendCardPickGrid()
+
+    setTimeout(() => { const sf = document.getElementById('sheet-friend'); if(sf) sf.classList.add('open') }, 350)
   } else if (sub === 'playing') {
-    tbBid.style.display       = 'none'
-    tbContract.style.display  = ''
-    tbScore.style.display     = ''
-    bidCenter.style.display   = 'none'
-    trickCenter.style.display = ''
-    bidHistory.style.display  = 'none'
-    document.getElementById('tb-friend').textContent = 'A♥ 박지민'
-    document.getElementById('sc-decl').textContent   = '8'
-    document.getElementById('sc-opp').textContent    = '4'
+    if(tbBid) tbBid.style.display       = 'none'
+    if(tbContract) tbContract.style.display  = ''
+    if(tbScore) tbScore.style.display     = ''
+    if(bidCenter) bidCenter.style.display   = 'none'
+    if(trickCenter) trickCenter.style.display = ''
+    if(bidHistory) bidHistory.style.display  = 'none'
+    const tbf = document.getElementById('tb-friend'); if(tbf) tbf.textContent = 'A♥ 박지민'
+    const scd = document.getElementById('sc-decl'); if(scd) scd.textContent   = '8'
+    const sco = document.getElementById('sc-opp'); if(sco) sco.textContent    = '4'
     setActiveSeat('sw-e')
-    document.getElementById('sw-e-sub').textContent  = 'S5 · 내기 차례'
-    document.getElementById('hand-hint').textContent = '탭하여 선택'
+    const swe = document.getElementById('sw-e-sub'); if(swe) swe.textContent  = 'S5 · 내기 차례'
+    const hh = document.getElementById('hand-hint'); if(hh) hh.textContent = '탭하여 선택'
     buildTrickCards()
+  } else if (sub === 'kitty') {
+    if(tbBid) tbBid.style.display       = 'none'
+    if(tbContract) tbContract.style.display  = ''
+    if(tbScore) tbScore.style.display     = 'none'
+    if(bidCenter) bidCenter.style.display   = ''
+    const bcv = document.getElementById('bid-center-val'); if(bcv) bcv.innerHTML = '🎴🎴🎴'
+    const bce = document.querySelector('#bid-center .bid-center__eyebrow'); if(bce) bce.textContent = '키티 픽업'
+    const bcb = document.querySelector('#bid-center .bid-center__by'); if(bcb) bcb.textContent = '바닥 카드 3장'
+    if(trickCenter) trickCenter.style.display = 'none'
+    if(bidHistory) bidHistory.style.display  = 'none'
+    clearActiveSeat()
+    const hh = document.getElementById('hand-hint'); if(hh) hh.textContent = '키티 확인 중'
+  } else if (sub === 'discard') {
+    if(tbBid) tbBid.style.display       = 'none'
+    if(tbContract) tbContract.style.display  = ''
+    if(tbScore) tbScore.style.display     = 'none'
+    if(bidCenter) bidCenter.style.display   = 'none'
+    if(trickCenter) trickCenter.style.display = 'none'
+    if(bidHistory) bidHistory.style.display  = 'none'
+    clearActiveSeat()
+    const hh = document.getElementById('hand-hint'); if(hh) hh.textContent = '버릴 카드 3장 선택'
+    // add 3 kitty cards to hand for mock
+    HAND.push({ rank:'2', suit:'heart', sym:'♥', cls:'c-heart' });
+    HAND.push({ rank:'4', suit:'diamond', sym:'♦', cls:'c-diamond' });
+    HAND.push({ rank:'5', suit:'club', sym:'♣', cls:'c-club' });
+    buildHandCards('playing') // allow tap
+    const pb = document.getElementById('play-bar')
+    if (pb) {
+       document.querySelector('#play-bar .play-bar__label').textContent = '버릴 카드'
+       document.querySelector('#play-bar .btn--primary').textContent = '버리기'
+    }
   }
 
   layoutGameTable()
 }
 
-/* Position the game table between topbar and hand */
 function layoutGameTable() {
   requestAnimationFrame(() => {
     const tb   = document.querySelector('.game-topbar')
@@ -1400,15 +1335,12 @@ function layoutGameTable() {
 
 function setActiveSeat(id) {
   clearActiveSeat()
-  document.getElementById(id)?.classList.add('active-turn')
+  const el = document.getElementById(id); if(el) el.classList.add('active-turn')
 }
 function clearActiveSeat() {
   document.querySelectorAll('.seat-widget.active-turn').forEach(el => el.classList.remove('active-turn'))
 }
 
-/* =============================================================
- * RENDER HELPERS
- * ============================================================= */
 function renderOpponentBacks(count) {
   ;['sw-nw-cards','sw-ne-cards','sw-w-cards','sw-e-cards'].forEach(id => {
     const el = document.getElementById(id)
@@ -1427,39 +1359,34 @@ function renderOpponentBacks(count) {
 
 function buildHandCards(sub) {
   const container = document.getElementById('hand-cards')
+  if(!container) return
   container.innerHTML = ''
-  const isPlaying = sub === 'playing'
+  const isPlaying = sub === 'playing' || sub === 'discard'
 
   HAND.forEach((card, i) => {
     if (S.playedCardIdxs.has(i)) return
-
     const chip = document.createElement('div')
     chip.className = 'card-chip'
     if (card.suit === 'joker') chip.className += ' joker'
 
     chip.innerHTML = `<span class="rank ${card.cls}">${card.rank}</span><span class="suit ${card.cls}">${card.sym}</span>`
-
     if (isPlaying) {
       chip.className += ' playable'
       chip.addEventListener('click', () => onCardTap(i, chip, card))
     }
-
     if (S.selectedCardIdx === i) chip.className += ' selected'
-
     container.appendChild(chip)
   })
-
-  document.getElementById('hand-count').textContent = HAND.length - S.playedCardIdxs.size
+  const hc = document.getElementById('hand-count'); if(hc) hc.textContent = HAND.length - S.playedCardIdxs.size
 }
 
 function buildTrickCards() {
   const container = document.getElementById('trick-cards')
+  if(!container) return
   container.innerHTML = ''
-
   TRICK_MOCK.forEach(tc => {
     const slot = document.createElement('div')
     slot.className = 'trick-card-slot'
-
     if (tc.played && tc.rank) {
       slot.innerHTML = `
         <div class="card-mini">
@@ -1472,133 +1399,153 @@ function buildTrickCards() {
         <div class="card-mini empty"></div>
         <span class="trick-pos-label">${tc.label}</span>`
     }
-
     container.appendChild(slot)
   })
 }
 
-/* =============================================================
- * BIDDING INTERACTIONS
- * ============================================================= */
 function adjustBid(delta) {
   S.bidLevel = Math.max(13, Math.min(20, S.bidLevel + delta))
-  document.getElementById('bid-num').textContent = S.bidLevel
+  const bn = document.getElementById('bid-num'); if(bn) bn.textContent = S.bidLevel
   syncBidConfirmBtn()
 }
-
 function pickTrump(trump, btn) {
   S.selectedTrump = trump
-  document.querySelectorAll('.trump-btn').forEach(b => {
-    b.className = b.className.replace(/sel-\w+/g, '').trim()
-  })
+  document.querySelectorAll('.trump-btn').forEach(b => b.className = b.className.replace(/sel-\w+/g, '').trim())
   btn.classList.add(`sel-${trump}`)
   syncBidConfirmBtn()
+  updateFriendCardPickGrid()
 }
-
 function syncBidConfirmBtn() {
   const sym = TRUMP_SYM[S.selectedTrump]
   const btn = document.getElementById('bid-confirm-btn')
   if (btn) btn.textContent = `${S.bidLevel}${sym} 입찰`
 }
+function doPass() { document.getElementById('sheet-bid')?.classList.remove('open') }
+function doBid() { document.getElementById('sheet-bid')?.classList.remove('open') }
 
-function doPass() {
-  document.getElementById('sheet-bid').classList.remove('open')
-  setTimeout(() => go('friend'), 300)
+function updateFriendCardPickGrid() {
+  const title = document.getElementById('card-pick-trump-title')
+  const othTitle = document.getElementById('card-pick-other-title')
+  const trumpGrid = document.getElementById('card-pick-trump')
+  const otherGrid = document.getElementById('card-pick-other')
+  if (!trumpGrid || !otherGrid) return
+
+  const t = S.selectedTrump || 'spade'
+  const suits = [
+    { key:'spade', sym:'♠', cls:'c-spade', label:'스페이드' },
+    { key:'heart', sym:'♥', cls:'c-heart', label:'하트' },
+    { key:'diamond', sym:'♦', cls:'c-diamond', label:'다이아' },
+    { key:'club', sym:'♣', cls:'c-club', label:'클럽' },
+  ]
+  const mighty = {
+    spade: 'A♦',
+    heart: 'A♣',
+    diamond: 'A♠',
+    club: 'A♥',
+  }
+
+  const tObj = suits.find(s => s.key === t) || suits[0]
+  if (title) title.textContent = `공약 수트 (${tObj.sym} ${tObj.label})`
+  if (othTitle) othTitle.textContent = '다른 수트 (마이티 제외)'
+
+  const mkOpt = (name, cls) => `
+        <div class="friend-card-opt" onclick="pickCard(this, '${name}')">
+          <div class="friend-card-opt__card ${cls}">${name}</div>
+          <div class="friend-card-opt__label">${name[0] === 'A' ? '에이스' : name[0] === 'K' ? '킹' : '퀸'}</div>
+        </div>`
+
+  trumpGrid.innerHTML = ''
+  ;['A','K','Q'].forEach(v => {
+    const name = `${v}${tObj.sym}`
+    trumpGrid.insertAdjacentHTML('beforeend', mkOpt(name, tObj.cls))
+  })
+
+  const others = suits.filter(s => s.key !== t)
+  otherGrid.innerHTML = ''
+  others.forEach(s => {
+    let card = `A${s.sym}`
+    if ((mighty[t] || 'A♦') === card) {
+      card = `K${s.sym}`
+    }
+    const cls = s.cls
+    otherGrid.insertAdjacentHTML('beforeend', mkOpt(card, cls))
+  })
 }
 
-function doBid() {
-  const sym = TRUMP_SYM[S.selectedTrump]
-  const cls = TRUMP_CLS[S.selectedTrump]
-  document.getElementById('bid-center-val').innerHTML =
-    `${S.bidLevel}<span class="${cls}">${sym}</span>`
-  document.getElementById('tb-high-bid').innerHTML =
-    `${S.bidLevel}<span class="${cls}">${sym}</span>`
-  document.getElementById('sheet-bid').classList.remove('open')
-  setTimeout(() => go('friend'), 300)
-}
-
-/* =============================================================
- * FRIEND CALL INTERACTIONS
- * ============================================================= */
-function pickFriend(el, name, hint) {
+function pickFriend(el, name, label) {
   document.querySelectorAll('.friend-option').forEach(e => e.classList.remove('sel'))
   el.classList.add('sel')
   S.selectedFriend = name
+  S.selectedFriendLabel = label || name
   const btn = document.getElementById('friend-confirm-btn')
-  if (btn) btn.textContent = name === '없음' ? '1인 선언' : `${name}로 친구 선택`
+  if (btn) { btn.textContent = name === '없음' ? '1인 선언' : `${S.selectedFriendLabel}로 친구 선택`; btn.disabled = false; }
 }
+function doFriendConfirm() { document.getElementById('sheet-friend')?.classList.remove('open') }
 
-function doFriendConfirm() {
-  document.getElementById('sheet-friend').classList.remove('open')
-  setTimeout(() => go('playing'), 300)
+function openCardPick() {
+  document.getElementById('sheet-card-pick')?.classList.add('open')
 }
+function closeCardPick() {
+  document.getElementById('sheet-card-pick')?.classList.remove('open')
+}
+function pickCard(el, cardName) {
+  const [rank, suit] = [cardName[0], cardName.slice(1)]
+  const color = (suit === '♠' || suit === '♣') ? 'c-spade' : 'c-heart'
+  document.querySelectorAll('.friend-card-opt').forEach(e => e.classList.remove('sel'))
+  el.classList.add('sel')
 
-/* =============================================================
- * CARD PLAY INTERACTIONS
- * ============================================================= */
-function onCardTap(idx, chipEl, card) {
-  if (S.selectedCardIdx === idx) {
-    cancelCardSelect()
-    return
+  const label = document.getElementById('card-pick-label')
+  const hint = document.getElementById('card-pick-hint')
+  if (label) label.textContent = cardName
+  if (hint) hint.textContent = '선택됨'
+
+  const cardPickOpt = document.querySelector('.friend-option.card-pick-opt')
+  if (cardPickOpt) {
+    cardPickOpt.classList.add('sel', 'has-card')
+    const icon = cardPickOpt.querySelector('#card-pick-icon')
+    if (icon) {
+      icon.textContent = '✓'
+      icon.style.color = '#fff'
+      icon.style.fontSize = '22px'
+      icon.style.fontWeight = '900'
+      icon.style.background = 'rgba(132,91,34,0.55)'
+    }
   }
 
-  /* deselect previous */
-  document.querySelectorAll('.card-chip.selected').forEach(c => c.classList.remove('selected'))
+  const friendOpts = document.querySelectorAll('#friend-list .friend-option')
+  friendOpts.forEach(e => e.classList.remove('sel'))
+  if (friendOpts[2]) friendOpts[2].classList.add('sel')
 
-  S.selectedCardIdx = idx
-  chipEl.classList.add('selected')
-
-  const label = card.suit === 'joker' ? '조커' : `${card.rank}${card.sym}`
-  document.getElementById('play-bar-card').innerHTML =
-    `<span class="${card.cls}">${label}</span>`
-  document.getElementById('play-bar').classList.add('open')
+  S.selectedFriend = cardName
+  S.selectedFriendLabel = cardName
+  const btn = document.getElementById('friend-confirm-btn')
+  if (btn) { btn.textContent = `${cardName}로 친구 선택`; btn.disabled = false }
+  closeCardPick()
 }
 
+function onCardTap(idx, chipEl, card) {
+  if (S.selectedCardIdx === idx) { cancelCardSelect(); return }
+  document.querySelectorAll('.card-chip.selected').forEach(c => c.classList.remove('selected'))
+  S.selectedCardIdx = idx
+  chipEl.classList.add('selected')
+  const label = card.suit === 'joker' ? '조커' : `${card.rank}${card.sym}`
+  const pbc = document.getElementById('play-bar-card'); if(pbc) pbc.innerHTML = `<span class="${card.cls}">${label}</span>`
+  const pb = document.getElementById('play-bar'); if(pb) pb.classList.add('open')
+}
 function cancelCardSelect() {
   document.querySelectorAll('.card-chip.selected').forEach(c => c.classList.remove('selected'))
   S.selectedCardIdx = null
-  document.getElementById('play-bar').classList.remove('open')
+  const pb = document.getElementById('play-bar'); if(pb) pb.classList.remove('open')
 }
-
 function playCard() {
   if (S.selectedCardIdx === null) return
-
   S.playedCardIdxs.add(S.selectedCardIdx)
-
-  /* Update trick display: fill 'S' slot */
-  const card = HAND[S.selectedCardIdx]
-  const sSlot = TRICK_MOCK.find(t => t.pos === 'S')
-  if (sSlot) {
-    sSlot.played = true
-    sSlot.rank   = card.rank
-    sSlot.sym    = card.sym
-    sSlot.cls    = card.cls
-  }
-
-  buildTrickCards()
   cancelCardSelect()
-  buildHandCards('playing')
-
-  /* Advance trick number (mock) */
-  const tn = parseInt(document.getElementById('trick-num').textContent, 10)
-  if (tn < 10) document.getElementById('trick-num').textContent = tn + 1
-
-  /* Update scores (mock) */
-  const d = parseInt(document.getElementById('sc-decl').textContent, 10)
-  document.getElementById('sc-decl').textContent = d + 1
+  buildHandCards(S.phase)
 }
 
-/* =============================================================
- * INIT
- * ============================================================= */
-go('lobby')
-
-/* Re-layout game table on resize (e.g., dev tools viewport change) */
-window.addEventListener('resize', () => {
-  if (S.phase === 'bidding' || S.phase === 'friend' || S.phase === 'playing') {
-    layoutGameTable()
-  }
-})
+go('friend');
+window.addEventListener('resize', () => layoutGameTable())
 </script>
 </body>
 </html>
